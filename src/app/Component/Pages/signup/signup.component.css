@@ -1,0 +1,35 @@
+.container{
+    color: aqua;
+    width: 100%;
+    display: flex;
+    margin-left: 10px;
+}
+.example-spacer{
+    flex: 1 1 auto;
+}
+
+.example-button-row{
+    justify-content: right;
+    text-align: right;
+    margin-left: 10px;
+}
+
+.btn{
+    text-align: right;
+    padding-right: 10px;
+}
+
+.example-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 200%;
+  }
+  
+  .example-full-width {
+    width: 300%;
+  }
+
+/* 
+.form-card { max-width: 600px; margin: 0 auto; padding: 16px; }
+
+.button-row { margin-top: 16px; } */

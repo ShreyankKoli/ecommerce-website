@@ -1,0 +1,105 @@
+<!-- <h1>Hello Seller</h1>
+ <div class="row">
+    <div class="col-12">
+        <table class="table table-bordered table-secondary">
+            <thead>
+                <tr>
+                    <th>userId</th>
+                    <th>roleId</th>
+                    <th>imageId</th>
+                    <th>imageName</th>
+                    <th>imageDescription</th>
+                    <th>price</th>
+                    <th>imageData</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let img of service.list">
+                    <th>{{img.userId}}</th>
+                    <th>{{img.roleId}}</th>
+                    <th>{{img.imageId}}</th>
+                    <th>{{img.imageName}}</th>
+                    <th>{{img.imageDescription}}</th>
+                    <th>{{img.price}}</th>
+                    <th><img [src]="base64Images[img.imageData]" alt="{{img.imageName}}"></th>
+                    <th>{{img.imageData}}</th>
+                    <th>
+                        <button class="btn btn-warning pt-2 mx-2" (click)="onEdit(ed)">Edit</button>
+                        <button class="btn btn-danger mx-2" (click)="onDelete(ed.accountDetailId)">Delete</button>
+                    </th>
+                </tr>
+            </tbody>
+        </table>
+    </div> -->
+
+<div class="container py-3">
+    <div class="col-15">
+        <div class="card">
+            <div class="card-header bg-primary">
+                Product Details
+            </div>
+            <br>
+            <div class="image-upload-container">
+
+                <form (submit)="onUpload()">
+                    <div>
+                        <div class="col-11 mx-5">
+                            <label for="roleId">Role ID:</label>
+                            <input type="number" value="102" class="form-control border px-4 py-3 my-2 rounded-2" id="roleId"
+                                [(ngModel)]="roleId" name="roleId" required />
+                        </div>
+                    </div>
+                    <div>
+                        <div class="col-11 mx-5">
+                            <label for="userId">User ID:</label>
+                            <input type="number" class="form-control border px-4 py-3 my-2 rounded-2" id="userId"
+                                [(ngModel)]="userId" name="userId" required />
+                        </div>
+                    </div>
+                    <div>
+                        <div class="col-11 mx-5">
+                            <label for="imageName">Image Name:</label>
+                            <input type="text" id="imageName" class="form-control border px-4 py-3 my-2 rounded-2"
+                                [(ngModel)]="imageName" name="imageName" required />
+                        </div>
+                    </div>
+                    <div>
+                        <div class="col-11 mx-5">
+                            <label for="imageDescription">Image Description</label>
+                            <input type="text" class="form-control border px-4 py-3 my-2 rounded-2"
+                                id="imageDescription" [(ngModel)]="imageDescription" name="imageDescription" required />
+                        </div>
+                    </div>
+                    <div>
+                        <div class="col-11 mx-5">
+                            <label for="price">Price</label>
+                            <input type="number" class="form-control border px-4 py-3 my-2 rounded-2" id="price"
+                                [(ngModel)]="price" name="price" required />
+                        </div>
+                    </div>
+                    <div>
+                        <div class="col-11 mx-5">
+                            <label for="quantity">quantity</label>
+                            <input type="number" class="form-control border px-4 py-3 my-2 rounded-2" id="quantity"
+                                [(ngModel)]="quantity" name="quantity" required />
+                        </div>
+                    </div>
+                    <div>
+                        <div class="col-11 mx-5">
+                            <label for="file">Choose File:</label>
+                            <input type="file" id="file" class="form-control border px-4 py-3 my-2 rounded-2"
+                                (change)="onFileSelected($event)" />
+                        </div>
+                    </div>
+                    <div class="col-11 mx-5">
+                    <button class="btn btn-outline-primary mx-2 my-4" type="button" (click)="onUpload()">Upload</button>
+                    <button class="btn btn-outline-secondary" type="reset">Reset</button>
+                </div>
+                </form>
+                <p>{{ uploadMessage }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<router-outlet></router-outlet>

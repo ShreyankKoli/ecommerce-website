@@ -1,0 +1,16 @@
+<mat-toolbar color="primary" class="mat-elevation-z6">
+    <button mat-icon-button>
+      <mat-icon>menu</mat-icon>
+    </button>
+    <span>Home</span>
+    <br>
+    <br>
+  <div class="example-button-row">
+    <!-- <button class="btn" mat-button (click)="onClick()">Add Products</button> -->
+    </div>
+    <span class="example-spacer"></span>
+    <!-- <button mat-button>Home</button>
+    <button mat-button>About</button> -->
+    <button mat-button (click)="onLogOut()">LogOut</button>
+  </mat-toolbar>
+  <router-outlet></router-outlet>

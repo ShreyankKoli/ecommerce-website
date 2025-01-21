@@ -1,0 +1,32 @@
+<!-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <button class="btn btn-success" (click)="onLogOut()">LogOut</button>
+        </li>
+      </ul>
+    </div>
+  </nav> -->
+
+  <mat-toolbar color="primary" class="mat-elevation-z6">
+    <button mat-icon-button>
+      <mat-icon>menu</mat-icon>
+    </button>
+    <span>Home</span>
+    <br>
+    <br>
+  <div class="example-button-row">
+    <button class="btn" mat-button (click)="onClick()">Add Products</button>
+    </div>
+    <span class="example-spacer"></span>
+    <!-- <button mat-button>Home</button>
+    <button mat-button>About</button> -->
+    <button mat-button (click)="onLogOut()">LogOut</button>
+  </mat-toolbar>
+
+  <router-outlet></router-outlet>

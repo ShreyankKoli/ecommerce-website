@@ -1,0 +1,57 @@
+<mat-toolbar color="primary" class="mat-elevation-z6">
+    <button mat-icon-button>
+      <mat-icon>menu</mat-icon>
+    </button>
+    <span>Home</span>
+    <br>
+    <br>
+    <span class="example-spacer"></span>
+    <!-- <button mat-button>Home</button>
+    <button mat-button>About</button> -->
+    <button mat-button (click)="login()">Login</button>
+  </mat-toolbar>
+<br>
+&nbsp;
+<div class="container class-12">
+    <form class="example-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="class">
+        <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label>Username</mat-label>
+            <input matInput formControlName="username" required />
+        </mat-form-field>
+    </div>
+<div>
+        <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label>password</mat-label>
+            <input matInput formControlName="password" required>
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label>firstName</mat-label>
+            <input matInput formControlName="firstName" required>
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label>lastName</mat-label>
+            <input matInput formControlName="lastName" required>
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field class="example-full-width">
+            <mat-label>mobile</mat-label>
+            <span matTextPrefix>+91 &nbsp;</span>
+            <input type="tel" matInput formControlName="mobile" placeholder="12345-67890" required>
+          </mat-form-field>
+        <!-- <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label>mobile</mat-label>
+            <input matInput formControlName="mobile" required>
+        </mat-form-field> -->
+    </div>
+    <div>
+        <button mat-button (click)="click()" color="blue">Basic</button>
+        <button mat-button (click)="login()">Back To Login</button>
+    </div>
+    </form>
+</div>

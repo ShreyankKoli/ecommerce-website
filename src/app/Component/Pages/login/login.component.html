@@ -1,0 +1,35 @@
+<div class="parent">
+    <main class="main-login">
+        <div class="left-login">
+            <h1>Welcome<br>do Login to browse products</h1>
+            <img src="https://i.postimg.cc/SKHjN3vY/bg1.jpg" class="left-login-img" alt="bg1 image">
+        </div>
+    
+        <div class="right-login">
+            <div class="card-login">
+                <h1>Login</h1>
+                <div class="textfield">
+                    <label for="user">User</label>
+                    <input type="text" name="userName" #userName="ngModel" [(ngModel)]="loginObj.userName" placeholder="User" required minlength="3">
+                    <div *ngIf="userName.invalid && userName.touched" class="text-danger">
+                        <small *ngIf="userName.errors?.['required']">Enter UserName</small>
+                        <small *ngIf="userName.errors?.['minlength']">Enter correct UserName</small>
+                    </div>
+                </div>
+    
+                <div class="textfield">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" #password="ngModel" [(ngModel)]="loginObj.password" placeholder="Password" required minlength="5">
+                    <div *ngIf="password.invalid && password.touched" class="text-danger">
+                        <small *ngIf="password.errors?.['required']">Enter Password</small>
+                        <small *ngIf="password.errors?.['minlength']">Password Incorrect</small>
+                    </div>
+                </div>
+    
+                <button class="btn-login" (click)="onLogin()">Login</button>
+                <button class="btn-signUp" (click)="onSignUp()">Sign-Up</button>
+            </div>
+        </div>
+    </main>
+</div>
+
