@@ -1,0 +1,122 @@
+second overview
+import { Component, OnInit } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+@Component({
+  selector: 'app-products',
+  templateUrl: './products.component.html',
+  styleUrls: ['./products.component.css']
+})
+export class ProductsComponent implements OnInit {
+  products: any[] = [];
+  productForm: FormGroup;
+  isEditMode = false;
+  editProductId: number | null = null;
+  apiUrl = 'https://your-api.com/products'; // Replace with your actual API URL
+
+  // HTTP Headers for API calls (e.g., Authentication, JSON content type)
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer your-auth-token' // Example: Use actual token
+    })
+  };
+
+  constructor(private http: HttpClient, private fb: FormBuilder) {
+    this.productForm = this.fb.group({
+      title: ['', Validators.required],
+      price: ['', [Validators.required, Validators.min(1)]]
+    });
+  }
+
+  ngOnInit(): void {
+    this.loadProducts();
+  }
+
+  // Fetch products (GET request)
+  loadProducts(): void {
+    this.http.get<any[]>(this.apiUrl, this.httpOptions).subscribe(response => {
+      this.products = response;
+    });
+  }
+
+  // Add new product (POST request)
+  addProduct(): void {
+    if (this.productForm.valid) {
+      this.http.post<any>(this.apiUrl, this.productForm.value, this.httpOptions)
+        .subscribe(newProduct => {
+          this.products.push(newProduct);
+          this.productForm.reset();
+        });
+    }
+  }
+
+  // Set product data in form for editing
+  editProduct(product: any): void {
+    this.isEditMode = true;
+    this.editProductId = product.id;
+    this.productForm.patchValue({
+      title: product.title,
+      price: product.price
+    });
+  }
+
+  // Update existing product (PUT request)
+  updateProduct(): void {
+    if (this.productForm.valid && this.editProductId !== null) {
+      this.http.put<any>(`${this.apiUrl}/${this.editProductId}`, this.productForm.value, this.httpOptions)
+        .subscribe(updatedProduct => {
+          const index = this.products.findIndex(p => p.id === this.editProductId);
+          if (index !== -1) this.products[index] = updatedProduct;
+          this.cancelEdit();
+        });
+    }
+  }
+
+  // Delete product (DELETE request)
+  deleteProduct(id: number): void {
+    this.http.delete(`${this.apiUrl}/${id}`, this.httpOptions)
+      .subscribe(() => {
+        this.products = this.products.filter(p => p.id !== id);
+      });
+  }
+
+  // Reset form
+  cancelEdit(): void {
+    this.isEditMode = false;
+    this.editProductId = null;
+    this.productForm.reset();
+  }
+}
+
+
+<div>
+  <h2>Product List</h2>
+  <ul>
+    <li *ngFor="let product of products">
+      {{ product.title }} - ${{ product.price }}
+      <button (click)="editProduct(product)">Edit</button>
+      <button (click)="deleteProduct(product.id)">Delete</button>
+    </li>
+  </ul>
+
+  <h3>{{ isEditMode ? 'Edit' : 'Add' }} Product</h3>
+  <form [formGroup]="productForm" (ngSubmit)="isEditMode ? updateProduct() : addProduct()">
+    
+    <input type="text" formControlName="title" placeholder="Product Title">
+    <div *ngIf="productForm.controls['title'].invalid && productForm.controls['title'].touched">
+      <small style="color: red;">Title is required</small>
+    </div>
+    
+    <input type="number" formControlName="price" placeholder="Product Price">
+    <div *ngIf="productForm.controls['price'].invalid && productForm.controls['price'].touched">
+      <small style="color: red;">Price must be at least 1</small>
+    </div>
+    
+    <button type="submit" [disabled]="productForm.invalid">
+      {{ isEditMode ? 'Update' : 'Add' }} Product
+    </button>
+    <button *ngIf="isEditMode" type="button" (click)="cancelEdit()">Cancel</button>
+  </form>
+</div>
