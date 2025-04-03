@@ -1,0 +1,57 @@
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+
+@Component({
+  selector: 'app-products',
+  templateUrl: './products.component.html',
+  styleUrls: ['./products.component.css']
+})
+export class ProductsComponent implements OnInit {
+  products: any[] = [];
+  newProduct = { id: 0, title: '', price: 0 };
+
+  constructor(private http: HttpClient) {}
+
+  ngOnInit(): void {
+    this.loadProducts();
+  }
+
+  // Load products from LocalStorage or API
+  loadProducts(): void {
+    const storedProducts = localStorage.getItem('products');
+    if (storedProducts) {
+      this.products = JSON.parse(storedProducts);
+    } else {
+      this.http.get<any>('https://dummyjson.com/products').subscribe(response => {
+        this.products = response.products;
+        localStorage.setItem('products', JSON.stringify(this.products));
+      });
+    }
+  }
+
+  // Add a new product
+  addProduct(): void {
+    if (this.newProduct.title && this.newProduct.price) {
+      this.newProduct.id = this.products.length + 1;
+      this.products.push({ ...this.newProduct });
+      localStorage.setItem('products', JSON.stringify(this.products));
+      this.newProduct = { id: 0, title: '', price: 0 }; // Reset form
+    }
+  }
+
+  // Delete a product
+  deleteProduct(id: number): void {
+    this.products = this.products.filter(product => product.id !== id);
+    localStorage.setItem('products', JSON.stringify(this.products));
+  }
+
+  // Update a product
+  updateProduct(id: number, title: string, price: number): void {
+    const product = this.products.find(p => p.id === id);
+    if (product) {
+      product.title = title;
+      product.price = price;
+      localStorage.setItem('products', JSON.stringify(this.products));
+    }
+  }
+}
