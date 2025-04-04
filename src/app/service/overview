@@ -16,63 +16,71 @@ export class ProductsComponent implements OnInit {
     this.loadProducts();
   }
 
+  // Load from LocalStorage or API
   loadProducts(): void {
     const storedProducts = localStorage.getItem('products');
     if (storedProducts) {
       this.products = JSON.parse(storedProducts);
     } else {
       this.http.get<any>('https://dummyjson.com/products').subscribe(response => {
-        // Store only specific fields
-        this.products = response.products.map((product: any) => ({
-          title: product.title,
-          image: product.thumbnail, // or product.images[0]
-          description: product.description,
-          stock: product.stock
+        this.products = response.products.map((p: any) => ({
+          title: p.title,
+          image: p.thumbnail,
+          description: p.description,
+          stock: p.stock
         }));
         localStorage.setItem('products', JSON.stringify(this.products));
       });
     }
   }
 
+  // Add product
   addProduct(): void {
-    const { title, image, description, stock } = this.newProduct;
-    if (title && image && description && stock >= 0) {
-      this.products.push({ title, image, description, stock });
+    if (this.newProduct.title && this.newProduct.image && this.newProduct.description) {
+      this.products.push({ ...this.newProduct });
       localStorage.setItem('products', JSON.stringify(this.products));
       this.newProduct = { title: '', image: '', description: '', stock: 0 };
     }
   }
 
+  // Delete product
   deleteProduct(index: number): void {
     this.products.splice(index, 1);
     localStorage.setItem('products', JSON.stringify(this.products));
   }
+
+  // Update product
+  updateProduct(index: number, updated: any): void {
+    this.products[index] = updated;
+    localStorage.setItem('products', JSON.stringify(this.products));
+  }
 }
 
-<div class="container">
-  <h2 class="mat-headline">Product List</h2>
+
+<div class="container mat-typography">
+  <h2>Product Manager</h2>
 
   <!-- Add Product Form -->
-  <mat-card class="add-product-card">
-    <mat-card-title>Add Product</mat-card-title>
+  <mat-card>
+    <mat-card-title>Add New Product</mat-card-title>
     <mat-card-content>
       <form>
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Title</mat-label>
           <input matInput [(ngModel)]="newProduct.title" name="title">
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Image URL</mat-label>
           <input matInput [(ngModel)]="newProduct.image" name="image">
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Description</mat-label>
           <textarea matInput [(ngModel)]="newProduct.description" name="description"></textarea>
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Stock</mat-label>
           <input matInput type="number" [(ngModel)]="newProduct.stock" name="stock">
         </mat-form-field>
@@ -83,17 +91,18 @@ export class ProductsComponent implements OnInit {
   </mat-card>
 
   <!-- Product List -->
-  <div class="products-list">
-    <mat-card *ngFor="let product of products; let i = index" class="product-card">
-      <img mat-card-image [src]="product.image" alt="{{ product.title }}">
-      <mat-card-title>{{ product.title }}</mat-card-title>
-      <mat-card-content>
-        <p>{{ product.description }}</p>
-        <p><strong>Stock:</strong> {{ product.stock }}</p>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-button color="warn" (click)="deleteProduct(i)">Delete</button>
-      </mat-card-actions>
-    </mat-card>
-  </div>
+  <mat-card class="product" *ngFor="let product of products; let i = index">
+    <img mat-card-image [src]="product.image" alt="Product image">
+    <mat-card-title>{{ product.title }}</mat-card-title>
+    <mat-card-content>
+      <p>{{ product.description }}</p>
+      <p><strong>Stock:</strong> {{ product.stock }}</p>
+    </mat-card-content>
+
+    <!-- Update Inline -->
+    <mat-card-actions>
+      <button mat-button color="warn" (click)="deleteProduct(i)">Delete</button>
+      <button mat-button (click)="updateProduct(i, product)">Update</button>
+    </mat-card-actions>
+  </mat-card>
 </div>
