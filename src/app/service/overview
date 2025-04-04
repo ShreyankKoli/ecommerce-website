@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ProductsComponent implements OnInit {
   products: any[] = [];
-  newProduct = { id: 0, title: '', price: 0 };
+  newProduct = { title: '', image: '', description: '', stock: 0 };
 
   constructor(private http: HttpClient) {}
 
@@ -16,42 +16,84 @@ export class ProductsComponent implements OnInit {
     this.loadProducts();
   }
 
-  // Load products from LocalStorage or API
   loadProducts(): void {
     const storedProducts = localStorage.getItem('products');
     if (storedProducts) {
       this.products = JSON.parse(storedProducts);
     } else {
       this.http.get<any>('https://dummyjson.com/products').subscribe(response => {
-        this.products = response.products;
+        // Store only specific fields
+        this.products = response.products.map((product: any) => ({
+          title: product.title,
+          image: product.thumbnail, // or product.images[0]
+          description: product.description,
+          stock: product.stock
+        }));
         localStorage.setItem('products', JSON.stringify(this.products));
       });
     }
   }
 
-  // Add a new product
   addProduct(): void {
-    if (this.newProduct.title && this.newProduct.price) {
-      this.newProduct.id = this.products.length + 1;
-      this.products.push({ ...this.newProduct });
+    const { title, image, description, stock } = this.newProduct;
+    if (title && image && description && stock >= 0) {
+      this.products.push({ title, image, description, stock });
       localStorage.setItem('products', JSON.stringify(this.products));
-      this.newProduct = { id: 0, title: '', price: 0 }; // Reset form
+      this.newProduct = { title: '', image: '', description: '', stock: 0 };
     }
   }
 
-  // Delete a product
-  deleteProduct(id: number): void {
-    this.products = this.products.filter(product => product.id !== id);
+  deleteProduct(index: number): void {
+    this.products.splice(index, 1);
     localStorage.setItem('products', JSON.stringify(this.products));
   }
-
-  // Update a product
-  updateProduct(id: number, title: string, price: number): void {
-    const product = this.products.find(p => p.id === id);
-    if (product) {
-      product.title = title;
-      product.price = price;
-      localStorage.setItem('products', JSON.stringify(this.products));
-    }
-  }
 }
+
+<div class="container">
+  <h2 class="mat-headline">Product List</h2>
+
+  <!-- Add Product Form -->
+  <mat-card class="add-product-card">
+    <mat-card-title>Add Product</mat-card-title>
+    <mat-card-content>
+      <form>
+        <mat-form-field appearance="outline">
+          <mat-label>Title</mat-label>
+          <input matInput [(ngModel)]="newProduct.title" name="title">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Image URL</mat-label>
+          <input matInput [(ngModel)]="newProduct.image" name="image">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Description</mat-label>
+          <textarea matInput [(ngModel)]="newProduct.description" name="description"></textarea>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Stock</mat-label>
+          <input matInput type="number" [(ngModel)]="newProduct.stock" name="stock">
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" (click)="addProduct()">Add Product</button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Product List -->
+  <div class="products-list">
+    <mat-card *ngFor="let product of products; let i = index" class="product-card">
+      <img mat-card-image [src]="product.image" alt="{{ product.title }}">
+      <mat-card-title>{{ product.title }}</mat-card-title>
+      <mat-card-content>
+        <p>{{ product.description }}</p>
+        <p><strong>Stock:</strong> {{ product.stock }}</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="warn" (click)="deleteProduct(i)">Delete</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>
